@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Notre futur, à nous deux</title>
+  <meta name="description" content="Un petit endroit rien que pour nous deux.">
+  <meta name="theme-color" content="#f9e1e3">
+  <!-- Site privé : on demande aux moteurs de recherche de ne pas l'indexer -->
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9D%A4%EF%B8%8F%3C/text%3E%3C/svg%3E">
+
+  <!-- Polices élégantes (si hors-ligne, le site utilise des polices de secours) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Décor : cœurs flottants et étoiles (générés par script.js) -->
+  <div class="bg" aria-hidden="true">
+    <div id="stars"></div>
+    <div id="hearts"></div>
+  </div>
+
+  <!-- Barre du haut : retour, noms, musique + barre de progression -->
+  <header class="topbar">
+    <div class="topbar-row">
+      <button class="icon-btn" id="backBtn" type="button" aria-label="Revenir à l’étape précédente">‹</button>
+      <div class="brand"><span data-bind="partner">Iverson</span> <span>&amp;</span> <span data-bind="author">Ranelle</span></div>
+      <button class="icon-btn off" id="musicBtn" type="button" aria-pressed="false" aria-label="Activer la musique d’ambiance" title="Musique d’ambiance">♪</button>
+    </div>
+    <div class="progress" id="progress" role="progressbar" aria-label="Avancement dans l’expérience" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+  </header>
+
+  <main id="app">
+
+    <!-- ===== ÉTAPE 0 : ACCUEIL ===== -->
+    <section class="screen" id="screen-welcome" hidden aria-labelledby="title-welcome">
+      <div class="card hero">
+        <p class="eyebrow">Pour <span data-bind="partner">Iverson</span></p>
+        <h1 id="title-welcome" tabindex="-1">Notre futur, <em>à nous deux</em></h1>
+        <p class="greeting">Coucou <span data-bind="partner">Iverson</span>,</p>
+        <p class="lead">J’ai imaginé un petit endroit pour nous deux. Pas pour prévoir toute notre vie à l’avance, mais pour rêver un peu, parler de nos projets et imaginer ce qu’on pourrait construire ensemble. Alors, tu viens ? bon tu n'a pas trop le choix quoi, let,s goooooo</p>
+        <button class="btn btn-primary btn-lg" type="button" data-next>Découvrir notre potentiel futur →</button>
+        <p class="tagline">Une petite aventure à deux.</p>
+        <p class="privacy-note">🔒 Tes réponses restent uniquement sur ton appareil. Pas de compte, pas de mot de passe, rien n’est envoyé automatiquement.</p>
+      </div>
+    </section>
+
+    <!-- Les écrans « histoire » et « chez nous / voyages / quotidien / projets » sont générés par script.js -->
+
+    <!-- ===== INTRO DU FUTUR ===== -->
+    <section class="screen" id="screen-futur-intro" hidden aria-labelledby="title-futur-intro">
+      <div class="card">
+        <p class="kicker">Notre futur 🔮</p>
+        <h2 id="title-futur-intro" tabindex="-1">Bon, parlons de nous dans quelques années…</h2>
+        <p class="lead">On ne peut pas savoir exactement ce que la vie nous réserve, mais on peut déjà imaginer quelques trucs. À toi de jouer !</p>
+        <p class="hint">Quatre petites étapes t’attendent :</p>
+        <ol class="cat-list" id="catList"></ol>
+        <div class="actions actions--end">
+          <button class="btn btn-primary" type="button" data-next>Let's goooooo →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== LE PETIT JEU ===== -->
+    <section class="screen" id="screen-game" hidden aria-labelledby="title-game">
+      <div class="card">
+        <p class="kicker">Le petit jeu 💍</p>
+        <h2 id="title-game" tabindex="-1">Tu nous imagines comment ?</h2>
+        <p class="muted">Aucune bonne ni mauvaise réponse : j’ai juste envie de découvrir ce que tu imagines.</p>
+        <div class="game-dots" id="gameDots" aria-hidden="true"></div>
+        <p class="game-step" id="gameStep"></p>
+        <div id="gameBody">
+          <h3 class="game-question" id="gameQuestion" tabindex="-1"></h3>
+          <div class="options" id="gameOptions"></div>
+          <div class="free" id="gameFree" hidden>
+            <label class="sr-only" for="gameText">Ta réponse</label>
+            <textarea id="gameText" rows="4" maxlength="500" placeholder="Un endroit, un moment, une surprise…"></textarea>
+            <button class="btn btn-soft" id="gameValidate" type="button">Valider ma réponse</button>
+          </div>
+          <p class="reaction" id="gameReaction" aria-live="polite"></p>
+        </div>
+        <div class="actions">
+          <button class="btn btn-ghost" id="gamePrev" type="button">← Question précédente</button>
+          <button class="btn btn-primary" id="gameNext" type="button">Question suivante →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== NOS PETITS RÊVES (BUCKET LIST) ===== -->
+    <section class="screen" id="screen-bucket" hidden aria-labelledby="title-bucket">
+      <div class="card">
+        <p class="kicker">Nos petits rêves 💗</p>
+        <h2 id="title-bucket" tabindex="-1">Si on devait faire une Wish list de notre couple…</h2>
+        <p class="muted">Touche les idées que tu aimerais vivre avec moi : elles s’ajoutent à notre liste, juste en dessous.</p>
+        <div class="chips" id="bucketIdeas"></div>
+
+        <button class="btn btn-soft" id="addDreamToggle" type="button" aria-expanded="false" aria-controls="addDreamForm">＋ Ajouter mon propre rêve</button>
+        <form class="add-form" id="addDreamForm" hidden>
+          <label class="sr-only" for="dreamInput">Ton rêve</label>
+          <input id="dreamInput" type="text" maxlength="120" autocomplete="off" placeholder="Ex. : dormir à la belle étoile…">
+          <button class="btn btn-primary" type="submit">Ajouter</button>
+        </form>
+
+        <h3 class="list-title">Notre liste <span id="dreamCount"></span></h3>
+        <ul class="dream-list" id="dreamList"></ul>
+        <p class="empty" id="dreamEmpty">Notre liste est vide pour l’instant : coche des idées ci-dessus ou ajoute la tienne ✨</p>
+        <p class="hint" style="margin-top:14px">Tu peux marquer un rêve comme « réalisé » (✓) ou le supprimer (✕). Tout est gardé sur ton appareil.</p>
+
+        <div class="actions actions--end">
+          <button class="btn btn-primary" type="button" data-next>Continuer →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== LA LETTRE POUR NOTRE FUTUR ===== -->
+    <section class="screen" id="screen-letter" hidden aria-labelledby="title-letter">
+      <div class="card">
+        <p class="kicker">Une lettre pour plus tard 📝</p>
+        <h2 id="title-letter" tabindex="-1">Un petit message pour nous, plus tard…</h2>
+        <p class="lead">Imagine qu’on puisse lire un message de nous-mêmes dans quelques années. Qu’est-ce que tu aimerais qu’on n’oublie jamais ?</p>
+
+        <label class="field-label" for="letterMain">Ton message</label>
+        <textarea id="letterMain" rows="7" maxlength="3000" placeholder="Écris librement, avec tes mots…"></textarea>
+
+        <label class="field-label" for="letterHope">Qu’est-ce que tu espères pour nous ? <span class="muted">(facultatif)</span></label>
+        <textarea id="letterHope" rows="2" maxlength="600"></textarea>
+
+        <label class="field-label" for="letterKeep">Qu’est-ce que tu aimerais qu’on continue toujours à faire ? <span class="muted">(facultatif)</span></label>
+        <textarea id="letterKeep" rows="2" maxlength="600"></textarea>
+
+        <label class="field-label" for="letterDream">Quel rêve aimerais-tu qu’on réalise ensemble ? <span class="muted">(facultatif)</span></label>
+        <textarea id="letterDream" rows="2" maxlength="600"></textarea>
+
+        <p class="hint" style="margin-top:14px">🔒 Ce message est enregistré uniquement sur ton appareil, dans ce navigateur. Il n’est pas envoyé automatiquement à <span data-bind="author">Ranelle</span> : c’est toi qui décides si tu veux le lui montrer.</p>
+
+        <div class="actions actions--center">
+          <button class="btn btn-primary" id="letterSave" type="button">Garder ce message ❤️</button>
+        </div>
+        <p class="reaction" id="letterError" aria-live="polite"></p>
+
+        <div class="seal" id="letterSaved" hidden aria-live="polite">
+          <div class="seal-icon" aria-hidden="true">💌</div>
+          <p class="seal-title">Un petit morceau de nous, à garder pour plus tard.</p>
+          <p class="seal-note" id="letterNote"></p>
+        </div>
+
+        <div class="actions actions--end">
+          <button class="btn btn-primary" type="button" data-next>Continuer →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== LA SURPRISE FINALE ===== -->
+    <section class="screen" id="screen-final" hidden aria-labelledby="title-final">
+      <div class="card final-card">
+        <p class="kicker">La suite 🎁</p>
+        <h2 id="title-final" tabindex="-1">Alors, on écrit la suite ensemble ? ❤️</h2>
+        <div class="final-text">
+          <p>On n’a pas besoin de tout savoir à l’avance. Il y aura sûrement des imprévus, des changements de plans et des choses qu’on n’imagine même pas encore.</p>
+          <p>Mais j’aime l’idée qu’on puisse parler de nos envies, se soutenir et avancer chacun à notre rythme, tout en partageant de beaux projets.</p>
+          <p>Et parmi tous les trucs qu’on pourrait faire dans les prochaines années, je crois que découvrir la suite avec toi me plaît déjà beaucoup.</p>
+          <p class="signature">— <span data-bind="author">Ranelle</span></p>
+        </div>
+        <div class="final-actions">
+          <button class="btn btn-soft" id="btnRevoir" type="button">Revoir nos projets</button>
+          <button class="btn btn-soft" id="btnAddDream" type="button">Ajouter un dernier rêve</button>
+          <button class="btn btn-primary" id="btnMessage" type="button">J’ai un message pour toi 💌</button>
+        </div>
+      </div>
+
+      <!-- Récapitulatif de ses choix -->
+      <div class="card recap" id="recapCard">
+        <p class="kicker">Notre récapitulatif ✨</p>
+        <h3>Tout ce que tu as imaginé</h3>
+        <p class="muted" style="margin-top:6px">Voici tes choix. Tu peux les copier, les exporter en texte ou me les envoyer toi-même (rien ne part tout seul).</p>
+        <div id="recapBody"></div>
+
+        <label class="recap-opts"><input type="checkbox" id="recapIncludeLetter" checked> Inclure mon petit message dans le récapitulatif</label>
+        <div class="recap-actions">
+          <button class="btn btn-primary" id="recapCopy" type="button">Copier le récapitulatif</button>
+          <button class="btn btn-soft" id="recapExport" type="button">Exporter en texte (.txt)</button>
+          <button class="btn btn-soft" id="recapShare" type="button" hidden>Envoyer à <span data-bind="author">Ranelle</span></button>
+        </div>
+
+        <h3 style="margin-top:28px;font-size:1.1rem">Modifier mes réponses</h3>
+        <div class="jump" id="jumpList"></div>
+        <p class="privacy-note">🔒 Tout est enregistré dans ce navigateur (localStorage) et reste sur cet appareil. Rien n’est envoyé à <span data-bind="author">Ranelle</span> automatiquement.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="foot">
+    <button class="link-btn" id="privacyBtn" type="button">Confidentialité</button> ·
+    <button class="link-btn" id="restartBtn" type="button">Recommencer</button>
+    <div style="margin-top:6px">Fait avec ❤️ par <span data-bind="author">Ranelle</span>, pour <span data-bind="partner">Iverson</span></div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
